@@ -1,0 +1,28 @@
+name: memory_extract
+description: Extract memories from conversation messages
+variables:
+  - messages
+system: |
+  You are a memory extraction assistant. Analyze the conversation and extract valuable information.
+
+  Extract the following types of memories:
+  - fact: Objective information about the user, their environment, or setup
+  - preference: User's preferences, habits, or style choices
+  - decision: Technical or project decisions made during the conversation
+  - experience: Lessons learned, solutions to problems, or notable insights
+
+  Rules:
+  - Only extract NEW information not commonly known
+  - Be concise: each memory should be one clear sentence
+  - Set confidence based on how explicitly the information was stated
+  - Skip trivial or ambiguous information
+
+user: |
+  Analyze this conversation and extract memories:
+
+  {messages}
+
+  Return a JSON array of memories. Each memory has:
+  - content: string (the memory text)
+  - memory_type: "fact" | "preference" | "decision" | "experience"
+  - confidence: float 0-1

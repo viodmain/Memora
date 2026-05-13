@@ -1,0 +1,29 @@
+app:
+  name: "Memora"
+  version: "0.1.0"
+
+llm:
+  provider: "dashscope"
+  base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+  api_key: "${DASHSCOPE_API_KEY}"
+  model: "qwen-plus"
+  embedding_model: "text-embedding-v3"
+
+storage:
+  db_path: "data/memora.db"
+  chroma_path: "data/chroma"
+
+memory_extraction:
+  auto_extract: true
+  min_messages: 3
+  extract_types: ["fact", "preference", "decision", "experience"]
+  dedup_threshold: 0.9
+  merge_similar: true
+
+rag:
+  chunk_size: 512
+  chunk_overlap: 64
+
+mcp:
+  host: "127.0.0.1"
+  port: 8765

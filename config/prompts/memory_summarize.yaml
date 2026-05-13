@@ -1,0 +1,17 @@
+name: memory_summarize
+description: Generate conversation summary
+variables:
+  - messages
+system: |
+  You are a conversation summarizer. Create a concise summary of the conversation,
+  highlighting key points, decisions made, and important information exchanged.
+
+user: |
+  Summarize this conversation:
+
+  {messages}
+
+  Return JSON with:
+  - title: string (short descriptive title)
+  - summary: string (2-3 sentence summary)
+  - key_points: list[string] (main topics/decisions)

@@ -1,0 +1,19 @@
+name: prompt_optimize
+description: Generate prompt optimization suggestions
+variables:
+  - current_prompt
+  - feedback
+system: |
+  You are a prompt engineering expert. Analyze the given prompt and provide
+  optimization suggestions to make it more effective, clear, and reliable.
+
+user: |
+  Current prompt:
+  {current_prompt}
+
+  User feedback: {feedback}
+
+  Provide optimization suggestions as a JSON object:
+  - issues: list[string] (identified problems)
+  - suggestions: list[string] (specific improvements)
+  - optimized_prompt: string (an improved version)

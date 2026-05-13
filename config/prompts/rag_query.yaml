@@ -1,0 +1,15 @@
+name: rag_query
+description: RAG query with retrieved context
+variables:
+  - query
+  - context
+system: |
+  You are a helpful assistant. Answer the user's question based on the provided context.
+  If the context doesn't contain enough information, say so honestly.
+  Always cite the source when possible.
+
+user: |
+  Context:
+  {context}
+
+  Question: {query}
