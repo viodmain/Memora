@@ -141,28 +141,16 @@ class DashScopeLLM:
         return resp.content
 
     async def extract_memories(self, messages: list[dict]) -> list[ExtractedMemory]:
-        """Extract memories from conversation using structured output.
+        """Extract memories from conversation using the memory_extract prompt.
 
-        Uses the memory_extract prompt template to instruct the LLM
-        to return memories in a structured format.
+        Formats the conversation, sends it to the LLM with the extraction
+        prompt template, and parses the JSON response into ExtractedMemory objects.
         """
-        # Format conversation for the prompt
         conversation = "\n".join(
             f"{m['role']}: {m['content']}" for m in messages
         )
         system, user = self._templates.render("memory_extract", messages=conversation)
 
-        # Use structured output to get typed results
-        structured_llm = self._chat.with_structured_output(ExtractedMemoryItem, method="json_mode")
-        # Build a single prompt asking for an array
-        full_prompt = f"{system}\n\n{user}\n\nRespond with a JSON object: {{\"memories\": [...]}}"
-        resp = await structured_llm.ainvoke([
-            SystemMessage(content="You are a memory extraction assistant. Extract memories as JSON."),
-            HumanMessage(content=full_prompt),
-        ])
-
-        # The structured output returns a single item; we need to handle the array case
-        # by using raw chat + JSON parsing instead
         raw = await self.chat([
             {"role": "system", "content": system},
             {"role": "user", "content": user},
