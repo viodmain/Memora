@@ -58,10 +58,12 @@ class VectorStore:
         if not records:
             return
         col = self._get_collection(collection)
+        # ChromaDB rejects empty dicts; use None for records without metadata
+        metadatas = [r.metadata if r.metadata else None for r in records]
         col.upsert(
             ids=[r.id for r in records],
             embeddings=[r.embedding for r in records],
-            metadatas=[r.metadata for r in records],
+            metadatas=metadatas,
         )
 
     async def search(

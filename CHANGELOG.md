@@ -19,3 +19,6 @@
 - M1.6: Storage facade — unified Storage dataclass + create_storage() factory
 - Prompt templates: memory_extract, memory_summarize, rag_query, prompt_optimize
 - Verified: all imports, config loading, SQLite + ChromaDB integration test passed
+- Tests: 34 tests written (test_config, test_models, test_storage), all passing
+- Bugfix: enable SQLite PRAGMA foreign_keys for cascade delete
+- Bugfix: ChromaDB rejects empty metadata dict, use None instead

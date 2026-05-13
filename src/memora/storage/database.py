@@ -20,6 +20,7 @@ class SQLiteStore:
         Path(self._db_path).parent.mkdir(parents=True, exist_ok=True)
         self._db = await aiosqlite.connect(self._db_path)
         self._db.row_factory = aiosqlite.Row
+        await self._db.execute("PRAGMA foreign_keys = ON")
         await run_migrations(self._db)
 
     async def close(self) -> None:
