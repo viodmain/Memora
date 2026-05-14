@@ -45,3 +45,11 @@
 - Bugfix: add `from __future__ import annotations` for Protocol type hints
 - Bugfix: get() increments access_count before reading (was returning stale count)
 - Tests: 18 new tests (test_memory.py), 69 total, all passing
+
+### Multi-provider support (complete)
+
+- Config: added EmbeddingConfig — separate embedding provider (DashScope) from chat provider (MiMo)
+- LLM: embedding uses DashScope SDK directly (langchain-openai incompatible with DashScope embedding API)
+- VectorStore: added upsert_texts/search_text for ChromaDB built-in embedding (unused for now, ready for offline mode)
+- Manual test: MiMo chat + DashScope embedding dual-engine verified end-to-end
+- Installed: dashscope SDK, sentence-transformers (disk full, deferred)

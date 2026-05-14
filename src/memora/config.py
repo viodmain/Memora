@@ -19,6 +19,15 @@ class LLMConfig:
 
 
 @dataclass
+class EmbeddingConfig:
+    """Separate embedding provider config. Falls back to LLM provider if not set."""
+    provider: str = ""
+    base_url: str = ""
+    api_key: str = ""
+    model: str = "text-embedding-v3"
+
+
+@dataclass
 class StorageConfig:
     db_path: str = "data/memora.db"
     chroma_path: str = "data/chroma"
@@ -50,6 +59,7 @@ class AppConfig:
     name: str = "Memora"
     version: str = "0.1.0"
     llm: LLMConfig = field(default_factory=LLMConfig)
+    embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
     storage: StorageConfig = field(default_factory=StorageConfig)
     memory_extraction: MemoryExtractionConfig = field(default_factory=MemoryExtractionConfig)
     rag: RAGConfig = field(default_factory=RAGConfig)
@@ -82,6 +92,7 @@ def _build_config(data: dict) -> AppConfig:
     data = _apply_env_vars(data)
 
     llm_data = data.get("llm", {})
+    embed_data = data.get("embedding", {})
     storage_data = data.get("storage", {})
     mem_data = data.get("memory_extraction", {})
     rag_data = data.get("rag", {})
@@ -92,6 +103,7 @@ def _build_config(data: dict) -> AppConfig:
         name=app_data.get("name", "Memora"),
         version=app_data.get("version", "0.1.0"),
         llm=LLMConfig(**{k: v for k, v in llm_data.items() if k in LLMConfig.__dataclass_fields__}),
+        embedding=EmbeddingConfig(**{k: v for k, v in embed_data.items() if k in EmbeddingConfig.__dataclass_fields__}),
         storage=StorageConfig(**{k: v for k, v in storage_data.items() if k in StorageConfig.__dataclass_fields__}),
         memory_extraction=MemoryExtractionConfig(
             **{k: v for k, v in mem_data.items() if k in MemoryExtractionConfig.__dataclass_fields__}

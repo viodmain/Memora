@@ -23,7 +23,6 @@ class MemoryEngineImpl:
 
     async def save(self, memory: Memory) -> Memory:
         """Write memory to SQLite and vectorize into ChromaDB."""
-        now = datetime.now().isoformat()
         memory.updated_at = datetime.now()
         await self._storage.db.execute(
             "INSERT INTO memories (id, content, memory_type, source, confidence, tags, access_count, created_at, updated_at) "
@@ -52,7 +51,6 @@ class MemoryEngineImpl:
 
     async def get(self, memory_id: str) -> Memory | None:
         """Fetch a single memory by ID, incrementing access count."""
-        # Increment first so the returned count reflects this access
         await self._storage.db.execute(
             "UPDATE memories SET access_count = access_count + 1 WHERE id = ?",
             (memory_id,),
@@ -97,7 +95,6 @@ class MemoryEngineImpl:
                 memory.id,
             ),
         )
-        # Re-vectorize
         embedding = await self._llm.embed(memory.content)
         await self._storage.vector.upsert("memories", [
             VectorRecord(

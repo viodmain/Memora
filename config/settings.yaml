@@ -3,11 +3,17 @@ app:
   version: "0.1.0"
 
 llm:
+  provider: "mimo"
+  base_url: "${OPENAI_BASE_URL}"
+  api_key: "${OPENAI_API_KEY}"
+  model: "mimo-v2.5-pro"
+  embedding_model: "text-embedding-v3"
+
+embedding:
   provider: "dashscope"
   base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
   api_key: "${DASHSCOPE_API_KEY}"
-  model: "qwen-plus"
-  embedding_model: "text-embedding-v3"
+  model: "text-embedding-v3"
 
 storage:
   db_path: "data/memora.db"

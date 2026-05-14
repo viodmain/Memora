@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .database import SQLiteStore
-from .vector_store import VectorStore, VectorRecord, VectorSearchResult
+from .vector_store import VectorStore, VectorRecord, TextRecord, VectorSearchResult
 
 
 @dataclass

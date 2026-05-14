@@ -114,6 +114,8 @@ class DashScopeLLM:
         model: str = "qwen-plus",
         embedding_model: str = "text-embedding-v3",
         templates_dir: str = "config/prompts",
+        embedding_base_url: str = "",
+        embedding_api_key: str = "",
     ) -> None:
         self._chat = ChatOpenAI(
             base_url=base_url,
@@ -121,11 +123,9 @@ class DashScopeLLM:
             model=model,
             temperature=0.7,
         )
-        self._embeddings = OpenAIEmbeddings(
-            base_url=base_url,
-            api_key=api_key,
-            model=embedding_model,
-        )
+        # Store embedding config for DashScope SDK
+        self._embed_api_key = embedding_api_key or api_key
+        self._embed_model = embedding_model
         self._templates = PromptTemplate(templates_dir)
 
     async def chat(self, messages: list[dict], temperature: float = 0.7) -> str:
@@ -187,12 +187,28 @@ class DashScopeLLM:
         return results
 
     async def embed(self, text: str) -> list[float]:
-        """Embed a single text string."""
-        return await self._embeddings.aembed_query(text)
+        """Embed a single text string using DashScope SDK."""
+        import dashscope
+        dashscope.api_key = self._embed_api_key
+        resp = dashscope.TextEmbedding.call(
+            model=self._embed_model,
+            input=text,
+        )
+        if resp.status_code != 200:
+            raise RuntimeError(f"Embedding failed: {resp.code} - {resp.message}")
+        return resp.output["embeddings"][0]["embedding"]
 
     async def embed_batch(self, texts: list[str]) -> list[list[float]]:
-        """Embed a batch of text strings."""
-        return await self._embeddings.aembed_documents(texts)
+        """Embed a batch of text strings using DashScope SDK."""
+        import dashscope
+        dashscope.api_key = self._embed_api_key
+        resp = dashscope.TextEmbedding.call(
+            model=self._embed_model,
+            input=texts,
+        )
+        if resp.status_code != 200:
+            raise RuntimeError(f"Embedding failed: {resp.code} - {resp.message}")
+        return [item["embedding"] for item in resp.output["embeddings"]]
 
 
 # ── Factory ──────────────────────────────────────────────────
@@ -203,6 +219,8 @@ def create_llm_client(
     model: str = "qwen-plus",
     embedding_model: str = "text-embedding-v3",
     templates_dir: str = "config/prompts",
+    embedding_base_url: str = "",
+    embedding_api_key: str = "",
 ) -> DashScopeLLM:
     """Factory: create an LLMClient instance from config values."""
     return DashScopeLLM(
@@ -211,4 +229,6 @@ def create_llm_client(
         model=model,
         embedding_model=embedding_model,
         templates_dir=templates_dir,
+        embedding_base_url=embedding_base_url,
+        embedding_api_key=embedding_api_key,
     )

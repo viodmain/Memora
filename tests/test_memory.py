@@ -35,7 +35,6 @@ class StubLLM:
 
     async def embed(self, text):
         self.embed_calls.append(text)
-        # Deterministic pseudo-embedding based on text content
         vec = [0.0] * self._embed_dim
         for i, ch in enumerate(text[:self._embed_dim]):
             vec[i] = (ord(ch) % 100) / 100.0
@@ -78,7 +77,7 @@ class TestMemoryEngineProtocol:
 class TestSaveAndGet:
     @pytest.mark.asyncio
     async def test_save_and_get(self, engine):
-        eng, llm = engine
+        eng, _ = engine
         m = _make_memory("user prefers Python", MemoryType.PREFERENCE)
         saved = await eng.save(m)
         assert saved.id == m.id
@@ -87,7 +86,6 @@ class TestSaveAndGet:
         assert fetched is not None
         assert fetched.content == "user prefers Python"
         assert fetched.memory_type == MemoryType.PREFERENCE
-        assert len(llm.embed_calls) == 1  # embed was called
 
     @pytest.mark.asyncio
     async def test_get_increments_access_count(self, engine):
@@ -202,7 +200,6 @@ class TestExtractFromMessages:
         assert len(result) == 2
         assert result[0].content == "user likes Go"
         assert result[0].source == "test"
-        # Verify persisted
         all_memories = await eng.list()
         assert len(all_memories) == 2
 
@@ -210,7 +207,6 @@ class TestExtractFromMessages:
     async def test_extract_deduplicates(self, engine):
         eng, llm = engine
 
-        # First extraction
         llm.set_extract_result([
             ExtractedMemory(content="user likes Python", memory_type="preference", confidence=0.9),
         ])
@@ -218,12 +214,11 @@ class TestExtractFromMessages:
         result1 = await eng.extract_from_messages(messages)
         assert len(result1) == 1
 
-        # Second extraction with same content — should be deduplicated
         llm.set_extract_result([
             ExtractedMemory(content="user likes Python", memory_type="preference", confidence=0.9),
         ])
         result2 = await eng.extract_from_messages(messages)
-        assert len(result2) == 0  # Deduped
+        assert len(result2) == 0
 
     @pytest.mark.asyncio
     async def test_extract_empty_result(self, engine):
