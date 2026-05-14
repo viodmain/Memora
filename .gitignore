@@ -26,3 +26,8 @@ data/
 # OS
 .DS_Store
 Thumbs.db
+
+# Test report (not tracked)
+测试报告.md
+.pytest_cache/
+test_manual.py
