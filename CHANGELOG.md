@@ -32,3 +32,16 @@
 - Factory: create_llm_client() wires config to LLM instance
 - Protocol conformance: DashScopeLLM satisfies LLMClient Protocol
 - Tests: 17 new tests (test_llm.py), 51 total, all passing
+
+## 2026-05-14
+
+### Milestone 3: Memory Engine (complete)
+
+- M3.1: MemoryEngine Protocol — 8 methods (save/get/list/update/delete/extract/recall/summarize)
+- M3.2: MemoryEngineImpl CRUD — SQLite + ChromaDB dual-write, access_count tracking
+- M3.3: extract_from_messages — LLM extraction + vector dedup (threshold 0.9)
+- M3.4: recall — embed query → ChromaDB vector search → fetch full records
+- M3.5: summarize_conversation — prompt template + JSON parsing
+- Bugfix: add `from __future__ import annotations` for Protocol type hints
+- Bugfix: get() increments access_count before reading (was returning stale count)
+- Tests: 18 new tests (test_memory.py), 69 total, all passing
