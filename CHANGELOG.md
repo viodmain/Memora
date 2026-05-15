@@ -91,3 +91,12 @@
 - M7.3: FastAPI routes — /api/memory, /api/knowledge, /api/prompt, /api/search
 - Bugfix: FastAPI deprecation warning (regex → pattern)
 - Tests: 8 new tests (test_api.py), 125 total, all passing
+
+### Milestone 8: Testing + Export (complete)
+
+- M8.1: Data export — export_memories_json/csv, export_documents_json, export_all_json
+- M8.2: Integration tests — memory lifecycle, RAG lifecycle, prompt versioning, unified search
+- M8.3: Final cleanup
+- Tests: 11 new tests (test_exporter + test_integration), 136 total, all passing
+
+### Phase 1 MVP: complete (all 8 milestones)
