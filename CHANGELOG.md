@@ -83,3 +83,11 @@
 - M6.2: MCP Server via FastMCP — 10 tools registered (save_memory, recall, extract_and_save, list_memories, search_knowledge, ingest_document, get_prompt, save_prompt, unified_search, get_stats)
 - M6.3: App container — create_app() factory with dependency injection
 - Tests: 5 new tests (test_search.py), 117 total, all passing
+
+### Milestone 7: CLI + API (complete)
+
+- M7.1: CLI (Typer + Rich) — ingest, search, memory (list/add/delete/recall), prompt, stats, serve
+- M7.2: CLI /prompt — list/add/get/score actions
+- M7.3: FastAPI routes — /api/memory, /api/knowledge, /api/prompt, /api/search
+- Bugfix: FastAPI deprecation warning (regex → pattern)
+- Tests: 8 new tests (test_api.py), 125 total, all passing
