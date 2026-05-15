@@ -53,3 +53,18 @@
 - VectorStore: added upsert_texts/search_text for ChromaDB built-in embedding (unused for now, ready for offline mode)
 - Manual test: MiMo chat + DashScope embedding dual-engine verified end-to-end
 - Installed: dashscope SDK, sentence-transformers (disk full, deferred)
+
+## 2026-05-15
+
+### Milestone 4: RAG Engine (core complete)
+
+- M4.1: RAGEngine Protocol — ingest, search, list_documents, get_document, delete_document
+- M4.2: MarkdownLoader — loads .md/.markdown/.mdx files
+- M4.3: TextChunker + MarkdownChunker — paragraph splitting, sentence fallback, heading-based splitting
+- M4.4: RAGEngineImpl ingest pipeline — load → chunk → embed_batch → store (SQLite + ChromaDB)
+- M4.5: RAG search — embed query → ChromaDB vector search → fetch chunk records
+- M4.6: TextLoader — fallback for .txt/.py/.js/.json/.yaml etc.
+- LoaderRegistry — extensible loader system with auto-detection
+- Bugfix: chunker now splits continuous text without sentence breaks (word-level fallback)
+- Tests: 26 new tests (test_rag.py), 95 total, all passing
+- P1 deferred: PDF, webpage, code loaders
