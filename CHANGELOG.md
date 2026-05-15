@@ -76,3 +76,10 @@
 - M5.3: Version management — auto-increment, all versions preserved
 - M5.4: score (1-5 validation), compare (diff two versions), optimize (LLM suggestions)
 - Tests: 17 new tests (test_prompt.py), 112 total, all passing
+
+### Milestone 6: Search + MCP Server (complete)
+
+- M6.1: SearchService — unified search across memory, documents, prompts (async parallel)
+- M6.2: MCP Server via FastMCP — 10 tools registered (save_memory, recall, extract_and_save, list_memories, search_knowledge, ingest_document, get_prompt, save_prompt, unified_search, get_stats)
+- M6.3: App container — create_app() factory with dependency injection
+- Tests: 5 new tests (test_search.py), 117 total, all passing
