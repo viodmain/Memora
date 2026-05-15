@@ -68,3 +68,11 @@
 - Bugfix: chunker now splits continuous text without sentence breaks (word-level fallback)
 - Tests: 26 new tests (test_rag.py), 95 total, all passing
 - P1 deferred: PDF, webpage, code loaders
+
+### Milestone 5: Prompt Engine (complete)
+
+- M5.1: PromptEngine Protocol — save/get/list/score/compare/optimize/delete
+- M5.2: PromptEngineImpl CRUD — SQLite storage with JSON variables
+- M5.3: Version management — auto-increment, all versions preserved
+- M5.4: score (1-5 validation), compare (diff two versions), optimize (LLM suggestions)
+- Tests: 17 new tests (test_prompt.py), 112 total, all passing
