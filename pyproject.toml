@@ -27,6 +27,7 @@ dependencies = [
     "beautifulsoup4>=4.12",
     "pypdf2>=3.0",
     "mcp>=1.0",
+    "fastmcp>=2.0",
     "dashscope>=1.20",
 ]
 
