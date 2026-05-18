@@ -145,3 +145,4 @@
 - [ ] Auto-extract: configure Claude Code hook or system prompt to automatically extract memories at end of conversation
 - [ ] PyPI publish: publish to PyPI for direct pip install
 - [ ] PDF/Code loaders: add PDF, code file, and webpage loaders (P1 deferred from Phase 1)
+- [ ] Bundle web frontend: build Vue static files into Python wheel, serve from FastAPI (single pip install)
