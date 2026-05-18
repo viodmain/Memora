@@ -29,7 +29,17 @@ npm install
 
 ### 1. API Key 配置
 
-复制环境变量模板：
+**`.env` 文件位置**：放在你运行命令的工作目录下。
+
+```powershell
+# 示例：你想在 D:\MyKnowledge 下使用 memora
+cd D:\MyKnowledge
+# 把 .env 文件放在这个目录下
+```
+
+**方式一：`.env` 文件（推荐）**
+
+复制环境变量模板到你的工作目录：
 
 ```bash
 cp .env.example .env
@@ -44,6 +54,18 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 
 # Embedding（向量化用，DashScope）
 DASHSCOPE_API_KEY=sk-xxxxxxxxxxxx
+```
+
+**方式二：系统环境变量（不用 .env 文件）**
+
+```powershell
+# PowerShell 临时设置（当前终端有效）
+$env:OPENAI_API_KEY="sk-xxx"
+$env:OPENAI_BASE_URL="https://api.openai.com/v1"
+$env:DASHSCOPE_API_KEY="sk-xxx"
+
+# 或加到系统环境变量（永久生效）
+[System.Environment]::SetEnvironmentVariable("OPENAI_API_KEY", "sk-xxx", "User")
 ```
 
 ### 2. 模型配置
