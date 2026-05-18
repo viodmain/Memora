@@ -122,3 +122,9 @@
 - P3.2: Auto-organize — removes exact duplicates and stale memories (30 days, 0 access)
 - P3.3: API Key auth — X-API-Key header, MEMORA_API_KEY env var (disabled if not set)
 - Tests: 9 new tests (test_enhanced.py), 145 total, all passing
+
+### Phase 4: Release Prep (complete)
+
+- README — install, configure, CLI/API/Web/MCP usage guide
+- .env.example — dual-engine config (chat + embedding)
+- pyproject.toml — pip install ready

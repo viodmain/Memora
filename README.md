@@ -7,37 +7,98 @@ Personal knowledge base for LLM users with MCP auto-memory extraction.
 - **Memory Engine** — Extract, store, and recall conversation memories automatically
 - **RAG Engine** — Ingest documents (Markdown, text, code) and search by semantic similarity
 - **Prompt Engine** — Version-manage prompts with scoring and optimization
-- **MCP Server** — Auto-extract memories during Claude Code conversations (coming soon)
+- **MCP Server** — Auto-extract memories during Claude Code conversations
 - **Multi-provider** — Supports MiMo, DashScope, OpenAI, DeepSeek, Ollama, or any OpenAI-compatible API
 
-## Quick Start
-
-### Install
+## Install
 
 ```bash
-git clone https://github.com/yourname/memora.git
-cd memora
+git clone https://github.com/viodmain/Memora.git
+cd Memora
 pip install -e .
 ```
 
-### Configure
+## Configure
 
 ```bash
 cp .env.example .env
-# Edit .env with your API keys
 ```
 
-### Run
+Edit `.env` with your API keys:
+
+```env
+# Chat LLM (OpenAI-compatible)
+OPENAI_API_KEY=sk-xxx
+OPENAI_BASE_URL=https://api.openai.com/v1
+
+# Embedding (DashScope)
+DASHSCOPE_API_KEY=sk-xxx
+```
+
+Default model is `mimo-v2.5-pro`. Change in `config/settings.yaml`:
+
+```yaml
+llm:
+  model: "gpt-4o"           # or qwen-plus, deepseek-chat, etc.
+  base_url: "${OPENAI_BASE_URL}"
+  api_key: "${OPENAI_API_KEY}"
+```
+
+## Usage
+
+### CLI
 
 ```bash
-# CLI
-memora
+memora ingest ./docs/api.md      # Ingest a document
+memora search "how to install"   # Unified search
+memora memory add "fact" -c "..."  # Add memory
+memora memory list               # List memories
+memora prompt list               # List prompts
+memora stats                     # Show statistics
+```
 
-# MCP Server (for Claude Code integration)
-memora mcp serve
+### REST API
 
-# Web API
-uvicorn memora.api.app:app --reload
+```bash
+uvicorn memora.api.app:app --reload --port 8000
+```
+
+Endpoints:
+- `GET /api/memory/recall?query=xxx` — Search memories
+- `POST /api/memory/save` — Save memory
+- `GET /api/knowledge/search?query=xxx` — Search documents
+- `POST /api/knowledge/ingest?path=xxx` — Ingest document
+- `GET /api/search/?query=xxx` — Unified search
+
+### Web Frontend
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+Opens at http://localhost:5173
+
+### MCP Server (Claude Code integration)
+
+```bash
+# Add to Claude Code
+claude mcp add memora python -m memora.mcp --cwd /path/to/Memora
+```
+
+Or add to `.mcp.json` in your project:
+
+```json
+{
+  "mcpServers": {
+    "memora": {
+      "command": "python",
+      "args": ["-m", "memora.mcp"],
+      "cwd": "/path/to/Memora"
+    }
+  }
+}
 ```
 
 ## Architecture
@@ -59,48 +120,11 @@ uvicorn memora.api.app:app --reload
               └──────────────────┘
 ```
 
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| LLM | MiMo / DashScope / OpenAI-compatible |
-| Embedding | DashScope text-embedding-v3 |
-| Framework | LangChain |
-| Vector DB | ChromaDB |
-| Relation DB | SQLite + aiosqlite |
-| Web API | FastAPI |
-| CLI | Typer + Rich |
-
-## Project Structure
-
-```
-src/memora/
-├── models/          # Pydantic data models
-├── storage/         # SQLite + ChromaDB storage layer
-├── llm.py           # LLM client (Protocol + DashScope impl)
-├── memory/          # Memory engine (extract, recall, summarize)
-├── rag/             # RAG engine (ingest, chunk, search)
-├── prompt/          # Prompt engine (CRUD, versioning, scoring)
-├── search/          # Unified search service
-├── mcp/             # MCP Server
-├── cli/             # CLI entry point
-├── api/             # FastAPI routes
-└── config.py        # Configuration loader
-```
-
 ## Development
 
 ```bash
-# Install dev dependencies
 pip install -e ".[dev]"
-
-# Run tests
 pytest tests/ -v
-
-# Run specific module tests
-pytest tests/test_memory.py -v
-pytest tests/test_rag.py -v
-pytest tests/test_prompt.py -v
 ```
 
 ## License
