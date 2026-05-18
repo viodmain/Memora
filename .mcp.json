@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "memora": {
+      "command": "/home/kiven_dev/myenv/bin/python",
+      "args": ["-m", "memora.mcp"],
+      "cwd": "/home/kiven_dev/memora"
+    }
+  }
+}

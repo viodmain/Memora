@@ -100,3 +100,18 @@
 - Tests: 11 new tests (test_exporter + test_integration), 136 total, all passing
 
 ### Phase 1 MVP: complete (all 8 milestones)
+
+## 2026-05-16
+
+### Phase 2: Web Frontend (core complete)
+
+- Vue 3 + TypeScript + Vite project setup
+- vue-router for SPA navigation, axios for API calls
+- Vite proxy config for API requests to FastAPI backend
+- Dashboard page — stats overview, recent memories
+- Memory page — browse, search (recall), add, delete
+- Knowledge page — document list, ingest, semantic search
+- Prompt page — list, view versions, add, delete
+- Navigation bar with 4 sections
+- Build passes TypeScript check + Vite production build
+- .mcp.json — MCP Server configuration for Claude Code integration
