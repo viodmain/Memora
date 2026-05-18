@@ -23,7 +23,7 @@ async def run_sse(host: str = "127.0.0.1", port: int = 8765):
     app = await create_app()
     mcp = create_mcp_server(app)
     print(f"MCP Server (SSE) listening on http://{host}:{port}/sse")
-    await mcp.run_http_async(host=host, port=port)
+    await mcp.run_http_async(transport="sse", host=host, port=port)
 
 
 def main():
