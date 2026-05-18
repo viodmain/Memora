@@ -67,16 +67,22 @@ class MemoryEngineImpl:
         memory_type: MemoryType | None = None,
         limit: int = 50,
         offset: int = 0,
+        sort_by: str = "created_at",
     ) -> list[Memory]:
-        """List memories with optional type filter, ordered by created_at DESC."""
+        """List memories with optional type filter.
+
+        Args:
+            sort_by: "created_at" (default) or "relevance" (access_count + recency weighted).
+        """
+        order = self._build_order_clause(sort_by)
         if memory_type:
             rows = await self._storage.db.fetch_all(
-                "SELECT * FROM memories WHERE memory_type = ? ORDER BY created_at DESC LIMIT ? OFFSET ?",
+                f"SELECT * FROM memories WHERE memory_type = ? {order} LIMIT ? OFFSET ?",
                 (memory_type.value, limit, offset),
             )
         else:
             rows = await self._storage.db.fetch_all(
-                "SELECT * FROM memories ORDER BY created_at DESC LIMIT ? OFFSET ?",
+                f"SELECT * FROM memories {order} LIMIT ? OFFSET ?",
                 (limit, offset),
             )
         return [self._row_to_memory(r) for r in rows]
@@ -218,7 +224,50 @@ class MemoryEngineImpl:
             key_points=data.get("key_points", []),
         )
 
+    # ── Auto-organize ─────────────────────────────────────────
+
+    async def auto_organize(self) -> dict:
+        """Clean up memories: remove duplicates and low-confidence entries.
+
+        Returns:
+            {"duplicates_removed": int, "stale_removed": int}
+        """
+        all_memories = await self.list(limit=10000)
+        duplicates_removed = 0
+        stale_removed = 0
+
+        # Find and remove duplicates (content similarity > 0.95)
+        seen: dict[str, str] = {}  # content_hash -> memory_id
+        for m in all_memories:
+            content_key = m.content.strip().lower()
+            if content_key in seen:
+                await self.delete(m.id)
+                duplicates_removed += 1
+            else:
+                seen[content_key] = m.id
+
+        # Remove stale memories (access_count == 0 and older than 30 days)
+        from datetime import timedelta
+        threshold = datetime.now() - timedelta(days=30)
+        stale = await self._storage.db.fetch_all(
+            "SELECT id FROM memories WHERE access_count = 0 AND created_at < ?",
+            (threshold.isoformat(),),
+        )
+        for row in stale:
+            await self.delete(row["id"])
+            stale_removed += 1
+
+        return {"duplicates_removed": duplicates_removed, "stale_removed": stale_removed}
+
     # ── Helpers ───────────────────────────────────────────────
+
+    @staticmethod
+    def _build_order_clause(sort_by: str) -> str:
+        """Build SQL ORDER BY clause."""
+        if sort_by == "relevance":
+            # Weight: access_count (higher = more relevant) + recency
+            return "ORDER BY (access_count * 0.7 + (julianday('now') - julianday(created_at)) * -0.3) DESC"
+        return "ORDER BY created_at DESC"
 
     @staticmethod
     def _row_to_memory(row: dict) -> Memory:

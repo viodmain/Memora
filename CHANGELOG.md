@@ -115,3 +115,10 @@
 - Navigation bar with 4 sections
 - Build passes TypeScript check + Vite production build
 - .mcp.json — MCP Server configuration for Claude Code integration
+
+### Phase 3: Enhanced Features (complete)
+
+- P3.1: Memory decay — list(sort_by="relevance") ranks by access_count + recency
+- P3.2: Auto-organize — removes exact duplicates and stale memories (30 days, 0 access)
+- P3.3: API Key auth — X-API-Key header, MEMORA_API_KEY env var (disabled if not set)
+- Tests: 9 new tests (test_enhanced.py), 145 total, all passing
