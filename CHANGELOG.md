@@ -128,3 +128,20 @@
 - README — install, configure, CLI/API/Web/MCP usage guide
 - .env.example — dual-engine config (chat + embedding)
 - pyproject.toml — pip install ready
+- USAGE.md — detailed usage guide (CLI/API/Web/MCP)
+
+## 2026-05-18
+
+### Bugfixes & MCP Integration
+
+- fix: add __main__.py to cli package (python -m memora.cli works)
+- fix: add dashscope and fastmcp to pyproject.toml dependencies
+- feat: SSE transport mode for MCP server (python -m memora.mcp --sse)
+- Claude Code MCP integration verified — 10 tools connected
+- Rebuilt wheel package with all fixes
+
+### TODO
+
+- [ ] Auto-extract: configure Claude Code hook or system prompt to automatically extract memories at end of conversation
+- [ ] PyPI publish: publish to PyPI for direct pip install
+- [ ] PDF/Code loaders: add PDF, code file, and webpage loaders (P1 deferred from Phase 1)
