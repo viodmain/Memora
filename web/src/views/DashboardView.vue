@@ -5,14 +5,20 @@ import api from '../api/client'
 const stats = ref({ memories: 0, documents: 0, prompts: 0 })
 const recentMemories = ref<any[]>([])
 
-onMounted(async () => {
+const loadData = async () => {
   try {
-    const memRes = await api.get('/memory/', { params: { limit: 5 } }).catch(() => ({ data: [] }))
+    const [memRes, statsRes] = await Promise.all([
+      api.get('/memory/', { params: { limit: 5 } }).catch(() => ({ data: [] })),
+      api.get('/search/stats').catch(() => ({ data: { memories: 0, documents: 0, prompts: 0 } })),
+    ])
     recentMemories.value = memRes.data
+    stats.value = statsRes.data
   } catch (e) {
     console.error(e)
   }
-})
+}
+
+onMounted(loadData)
 </script>
 
 <template>
