@@ -13,7 +13,19 @@ from memora.models.memory import Memory, MemoryType
 
 def create_mcp_server(app: App) -> FastMCP:
     """Create FastMCP server with all Memora tools registered."""
-    mcp = FastMCP("memora")
+    mcp = FastMCP(
+        "memora",
+        instructions="""You have access to Memora, a personal knowledge base. Follow these rules:
+
+1. AUTO-EXTRACT: At the end of EVERY conversation, call `extract_and_save` with the conversation messages to save valuable information (technical decisions, user preferences, important facts, lessons learned).
+
+2. AUTO-RECALL: At the start of a new conversation, if the user asks about previous work or context, call `recall` to search for relevant memories before responding.
+
+3. OFFER INGEST: When the user shares or references a document, offer to ingest it with `ingest_document`.
+
+4. SAVE IMPORTANT: During conversation, if you identify important information (decisions, preferences, facts), proactively call `save_memory` to record it.
+""",
+    )
 
     # ── Memory tools ──────────────────────────────────────────
 

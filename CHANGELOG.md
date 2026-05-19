@@ -142,7 +142,7 @@
 
 ### Features
 
-- CLAUDE.md: auto-extract instructions for Claude Code integration
+- MCP Server: embedded auto-extract/recall/ingest instructions (no CLAUDE.md needed)
 - PDFLoader: PDF file ingestion using pypdf2
 - Updated LoaderRegistry: auto-detect PDF, Markdown, and text files
 - Tests: 1 new test (PDF loader registry), 146 total, all passing
