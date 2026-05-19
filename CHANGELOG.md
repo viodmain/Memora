@@ -140,9 +140,14 @@
 - Claude Code MCP integration verified — 10 tools connected
 - Rebuilt wheel package with all fixes
 
+### Features
+
+- CLAUDE.md: auto-extract instructions for Claude Code integration
+- PDFLoader: PDF file ingestion using pypdf2
+- Updated LoaderRegistry: auto-detect PDF, Markdown, and text files
+- Tests: 1 new test (PDF loader registry), 146 total, all passing
+
 ### TODO
 
-- [ ] Auto-extract: configure Claude Code hook or system prompt to automatically extract memories at end of conversation
-- [ ] PDF/Code loaders: add PDF, code file, and webpage loaders (P1 deferred from Phase 1)
 - [ ] Bundle web frontend: build Vue static files into Python wheel, serve from FastAPI (single pip install)
 - [ ] PyPI publish: publish to PyPI for direct pip install (pending — after all features confirmed by user)

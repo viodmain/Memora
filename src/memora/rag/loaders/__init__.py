@@ -48,9 +48,11 @@ class LoaderRegistry:
 def create_default_registry() -> LoaderRegistry:
     """Create a LoaderRegistry with all built-in loaders."""
     from .markdown import MarkdownLoader
+    from .pdf import PDFLoader
     from .text import TextLoader
 
     registry = LoaderRegistry()
     registry.register(MarkdownLoader())
+    registry.register(PDFLoader())
     registry.register(TextLoader())  # fallback
     return registry

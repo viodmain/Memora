@@ -195,10 +195,16 @@ class TestLoaderRegistry:
         loader = registry.get_loader("test.py")
         assert isinstance(loader, TextLoader)
 
+    def test_selects_pdf_loader(self):
+        from memora.rag.loaders.pdf import PDFLoader
+        registry = create_default_registry()
+        loader = registry.get_loader("test.pdf")
+        assert isinstance(loader, PDFLoader)
+
     def test_raises_for_unknown(self):
         registry = create_default_registry()
         with pytest.raises(ValueError, match="No loader found"):
-            registry.get_loader("test.pdf")
+            registry.get_loader("test.xyz")
 
 
 # ── RAG Engine Tests ─────────────────────────────────────────
@@ -249,8 +255,8 @@ class TestIngest:
     @pytest.mark.asyncio
     async def test_ingest_unsupported_file(self, rag_engine, tmp_path):
         eng, _ = rag_engine
-        path = tmp_path / "test.pdf"
-        path.write_bytes(b"fake pdf")
+        path = tmp_path / "test.xyz"
+        path.write_bytes(b"unknown format")
         with pytest.raises(ValueError, match="No loader found"):
             await eng.ingest(str(path))
 
