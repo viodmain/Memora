@@ -44,6 +44,17 @@ llm:
   api_key: "${OPENAI_API_KEY}"
 ```
 
+## Services
+
+Memora has two independent services — start whichever you need:
+
+| Service | Command | Purpose |
+|---|---|---|
+| REST API + Web | `python -m uvicorn memora.api.app:app --port 8000` | Web UI, API |
+| MCP Server | `python -m memora.mcp --sse --port 8765` | Claude Code integration |
+
+Both can run simultaneously (separate terminals), or just one.
+
 ## Usage
 
 ### CLI

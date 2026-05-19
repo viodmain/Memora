@@ -130,6 +130,19 @@ MEMORA_API_KEY=your-secret-key
 
 ---
 
+## 服务说明
+
+Memora 有两个独立服务，按需启动：
+
+| 服务 | 命令 | 用途 |
+|---|---|---|
+| REST API + Web | `python -m uvicorn memora.api.app:app --port 8000` | Web 界面、API 调用 |
+| MCP Server | `python -m memora.mcp --sse --port 8765` | Claude Code 集成 |
+
+两个服务可以同时运行（各开一个终端），也可以只启动其中一个。
+
+---
+
 ## 使用方式
 
 ### 方式一：CLI 命令行

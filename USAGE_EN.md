@@ -130,6 +130,19 @@ Clients must include header: `X-API-Key: your-secret-key`
 
 ---
 
+## Services
+
+Memora has two independent services — start whichever you need:
+
+| Service | Command | Purpose |
+|---|---|---|
+| REST API + Web | `python -m uvicorn memora.api.app:app --port 8000` | Web UI, API calls |
+| MCP Server | `python -m memora.mcp --sse --port 8765` | Claude Code integration |
+
+Both can run simultaneously (separate terminals), or you can start just one.
+
+---
+
 ## Usage
 
 ### Option 1: CLI
