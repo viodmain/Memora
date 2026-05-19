@@ -1,0 +1,5 @@
+recursive-include src/memora/static *
+recursive-exclude web *
+recursive-exclude tests *
+recursive-exclude data *
+recursive-exclude config *

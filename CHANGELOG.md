@@ -145,9 +145,9 @@
 - MCP Server: embedded auto-extract/recall/ingest instructions (no CLAUDE.md needed)
 - PDFLoader: PDF file ingestion using pypdf2
 - Updated LoaderRegistry: auto-detect PDF, Markdown, and text files
-- Tests: 1 new test (PDF loader registry), 146 total, all passing
+- Web frontend bundled into wheel — `pip install` + `uvicorn` serves everything
+- Tests: 146 total, all passing
 
 ### TODO
 
-- [ ] Bundle web frontend: build Vue static files into Python wheel, serve from FastAPI (single pip install)
 - [ ] PyPI publish: publish to PyPI for direct pip install (pending — after all features confirmed by user)

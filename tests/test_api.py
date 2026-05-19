@@ -62,9 +62,9 @@ def client(mock_app):
 @pytest.mark.asyncio
 async def test_root(client):
     async with client as c:
-        resp = await c.get("/")
+        resp = await c.get("/api/status")
         assert resp.status_code == 200
-        assert resp.json()["name"] == "Memora"
+        assert resp.json()["name"] == "Memora API"
 
 
 @pytest.mark.asyncio
