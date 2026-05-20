@@ -88,6 +88,12 @@ def create_mcp_server(app: App) -> FastMCP:
         result = await app.prompt.save(name, content, variables=variables or [])
         return result.model_dump()
 
+    @mcp.tool()
+    async def list_prompts(tag: str | None = None) -> list[dict]:
+        """List all saved prompt templates."""
+        results = await app.prompt.list(tag=tag)
+        return [r.model_dump() for r in results]
+
     # ── Search tools ──────────────────────────────────────────
 
     @mcp.tool()
