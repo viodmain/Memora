@@ -15,9 +15,14 @@ embedding:
   api_key: "${DASHSCOPE_API_KEY}"
   model: "text-embedding-v3"
 
-storage:
-  db_path: "data/memora.db"
-  chroma_path: "data/chroma"
+# Storage paths default to platform-specific user data directory:
+#   Windows:  %APPDATA%/memora/
+#   macOS:    ~/Library/Application Support/memora/
+#   Linux:    ~/.local/share/memora/
+# Override with MEMORA_DATA_DIR env var or uncomment below:
+# storage:
+#   db_path: "data/memora.db"
+#   chroma_path: "data/chroma"
 
 memory_extraction:
   auto_extract: true

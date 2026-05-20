@@ -26,7 +26,8 @@ class TestBuildConfig:
         cfg = _build_config({})
         assert cfg.name == "Memora"
         assert cfg.llm.provider == "dashscope"
-        assert cfg.storage.db_path == "data/memora.db"
+        assert cfg.storage.db_path.endswith("memora.db")
+        assert "memora" in cfg.storage.chroma_path
 
     def test_partial_override(self):
         cfg = _build_config({"llm": {"model": "qwen-turbo"}})

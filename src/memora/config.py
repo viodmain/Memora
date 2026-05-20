@@ -1,6 +1,7 @@
 """Application configuration loader."""
 
 import os
+import sys
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Any
@@ -8,6 +9,34 @@ from typing import Any
 import yaml
 from dotenv import load_dotenv
 
+
+# ── Platform-specific data directory ─────────────────────────
+
+def get_data_dir() -> Path:
+    """Get platform-specific data directory for Memora.
+
+    Windows:  %APPDATA%/memora/
+    macOS:    ~/Library/Application Support/memora/
+    Linux:    ~/.local/share/memora/
+
+    Override with MEMORA_DATA_DIR environment variable.
+    """
+    # Environment variable override takes priority
+    env_dir = os.environ.get("MEMORA_DATA_DIR")
+    if env_dir:
+        return Path(env_dir)
+
+    if sys.platform == "win32":
+        base = Path(os.environ.get("APPDATA", Path.home() / "AppData" / "Roaming"))
+    elif sys.platform == "darwin":
+        base = Path.home() / "Library" / "Application Support"
+    else:
+        base = Path.home() / ".local" / "share"
+
+    return base / "memora"
+
+
+# ── Data models ──────────────────────────────────────────────
 
 @dataclass
 class LLMConfig:
@@ -29,8 +58,15 @@ class EmbeddingConfig:
 
 @dataclass
 class StorageConfig:
-    db_path: str = "data/memora.db"
-    chroma_path: str = "data/chroma"
+    db_path: str = ""
+    chroma_path: str = ""
+
+    def __post_init__(self):
+        data_dir = get_data_dir()
+        if not self.db_path:
+            self.db_path = str(data_dir / "memora.db")
+        if not self.chroma_path:
+            self.chroma_path = str(data_dir / "chroma")
 
 
 @dataclass
@@ -65,6 +101,8 @@ class AppConfig:
     rag: RAGConfig = field(default_factory=RAGConfig)
     mcp: MCPConfig = field(default_factory=MCPConfig)
 
+
+# ── Helpers ──────────────────────────────────────────────────
 
 def _resolve_env_vars(value: str) -> str:
     """Resolve ${ENV_VAR} placeholders in string values."""
@@ -113,36 +151,55 @@ def _build_config(data: dict) -> AppConfig:
     )
 
 
-def load_config(config_path: str = "config/settings.yaml") -> AppConfig:
-    """Load application configuration from YAML file.
+def _load_env():
+    """Load .env file. Priority: env vars already set > data dir > cwd > package dir."""
+    data_dir = get_data_dir()
 
-    Searches for .env in: current directory, config file directory,
-    and package installation directory.
+    env_locations = [
+        data_dir / ".env",                  # Data directory (recommended)
+        Path(".env"),                       # Current working directory
+    ]
+    for env_path in env_locations:
+        if env_path.exists():
+            load_dotenv(env_path, override=False)  # Don't override existing env vars
+            break
+
+
+def load_config(config_path: str = "") -> AppConfig:
+    """Load application configuration.
+
+    Priority order:
+    1. Environment variables (always take priority)
+    2. config/settings.yaml (if exists)
+    3. Default values
+
+    .env loading priority:
+    1. MEMORA_DATA_DIR/.env
+    2. Current working directory/.env
 
     Args:
-        config_path: Path to the settings YAML file.
+        config_path: Path to settings YAML. If empty, uses default locations.
 
     Returns:
         AppConfig instance with resolved values.
     """
-    # Search for .env in multiple locations
-    env_locations = [
-        Path(".env"),                           # Current working directory
-        Path(config_path).parent / ".env",      # Same dir as config file
-        Path(__file__).parent / ".env",         # Package installation dir
-    ]
-    for env_path in env_locations:
-        if env_path.exists():
-            load_dotenv(env_path)
-            break
-    else:
-        load_dotenv()  # Fallback to default behavior
+    _load_env()
 
-    path = Path(config_path)
-    if not path.exists():
+    # Search for settings.yaml
+    if not config_path:
+        candidates = [
+            get_data_dir() / "settings.yaml",
+            Path("config/settings.yaml"),
+        ]
+        for c in candidates:
+            if c.exists():
+                config_path = str(c)
+                break
+
+    if not config_path or not Path(config_path).exists():
         return AppConfig()
 
-    with open(path, "r", encoding="utf-8") as f:
+    with open(config_path, "r", encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
 
     return _build_config(data)
