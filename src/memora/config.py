@@ -116,13 +116,27 @@ def _build_config(data: dict) -> AppConfig:
 def load_config(config_path: str = "config/settings.yaml") -> AppConfig:
     """Load application configuration from YAML file.
 
+    Searches for .env in: current directory, config file directory,
+    and package installation directory.
+
     Args:
         config_path: Path to the settings YAML file.
 
     Returns:
         AppConfig instance with resolved values.
     """
-    load_dotenv()
+    # Search for .env in multiple locations
+    env_locations = [
+        Path(".env"),                           # Current working directory
+        Path(config_path).parent / ".env",      # Same dir as config file
+        Path(__file__).parent / ".env",         # Package installation dir
+    ]
+    for env_path in env_locations:
+        if env_path.exists():
+            load_dotenv(env_path)
+            break
+    else:
+        load_dotenv()  # Fallback to default behavior
 
     path = Path(config_path)
     if not path.exists():
