@@ -126,7 +126,11 @@ def _apply_env_vars(data: dict) -> dict:
 
 
 def _build_config(data: dict) -> AppConfig:
-    """Build AppConfig from a flat dictionary."""
+    """Build AppConfig from a flat dictionary.
+
+    Environment variables are used as fallbacks for API keys and URLs
+    even when settings.yaml doesn't reference them.
+    """
     data = _apply_env_vars(data)
 
     llm_data = data.get("llm", {})
@@ -136,6 +140,14 @@ def _build_config(data: dict) -> AppConfig:
     rag_data = data.get("rag", {})
     mcp_data = data.get("mcp", {})
     app_data = data.get("app", {})
+
+    # Apply env vars as fallbacks for LLM config
+    llm_data.setdefault("api_key", os.environ.get("OPENAI_API_KEY", ""))
+    llm_data.setdefault("base_url", os.environ.get("OPENAI_BASE_URL", ""))
+
+    # Apply env vars as fallbacks for embedding config
+    embed_data.setdefault("api_key", os.environ.get("DASHSCOPE_API_KEY", ""))
+    embed_data.setdefault("base_url", os.environ.get("DASHSCOPE_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"))
 
     return AppConfig(
         name=app_data.get("name", "Memora"),
@@ -197,7 +209,7 @@ def load_config(config_path: str = "") -> AppConfig:
                 break
 
     if not config_path or not Path(config_path).exists():
-        return AppConfig()
+        return _build_config({})  # Still apply env var fallbacks
 
     with open(config_path, "r", encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
