@@ -29,43 +29,29 @@ npm install
 
 ### 1. API Key 配置
 
-**`.env` 文件位置**：放在你运行命令的工作目录下。
+**推荐方式：系统环境变量（永久生效，所有终端和 MCP Server 都能读到）**
 
 ```powershell
-# 示例：你想在 D:\MyKnowledge 下使用 memora
-cd D:\MyKnowledge
-# 把 .env 文件放在这个目录下
+# Windows PowerShell
+[System.Environment]::SetEnvironmentVariable("OPENAI_API_KEY", "你的密钥", "User")
+[System.Environment]::SetEnvironmentVariable("OPENAI_BASE_URL", "https://api.openai.com/v1", "User")
+[System.Environment]::SetEnvironmentVariable("DASHSCOPE_API_KEY", "你的百炼密钥", "User")
 ```
 
-**方式一：`.env` 文件（推荐）**
+```bash
+# Linux / macOS（加到 ~/.bashrc 或 ~/.zshrc）
+export OPENAI_API_KEY="你的密钥"
+export OPENAI_BASE_URL="https://api.openai.com/v1"
+export DASHSCOPE_API_KEY="你的百炼密钥"
+```
 
-复制环境变量模板到你的工作目录：
+设置后重启终端生效。
+
+**备选方式：`.env` 文件（仅 CLI 和手动启动时有效，MCP Server 不推荐）**
 
 ```bash
 cp .env.example .env
-```
-
-编辑 `.env`，填入你的 API Key：
-
-```env
-# Chat LLM（对话用，OpenAI 兼容接口）
-OPENAI_API_KEY=sk-xxxxxxxxxxxx
-OPENAI_BASE_URL=https://api.openai.com/v1
-
-# Embedding（向量化用，DashScope）
-DASHSCOPE_API_KEY=sk-xxxxxxxxxxxx
-```
-
-**方式二：系统环境变量（不用 .env 文件）**
-
-```powershell
-# PowerShell 临时设置（当前终端有效）
-$env:OPENAI_API_KEY="sk-xxx"
-$env:OPENAI_BASE_URL="https://api.openai.com/v1"
-$env:DASHSCOPE_API_KEY="sk-xxx"
-
-# 或加到系统环境变量（永久生效）
-[System.Environment]::SetEnvironmentVariable("OPENAI_API_KEY", "sk-xxx", "User")
+# 编辑 .env 填入 API Key
 ```
 
 ### 2. 模型配置

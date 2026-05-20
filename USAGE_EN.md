@@ -29,43 +29,29 @@ npm install
 
 ### 1. API Key Setup
 
-**`.env` file location**: Place it in your working directory where you run commands.
+**Recommended: System environment variables (persistent, works with MCP Server)**
 
 ```powershell
-# Example: you want to use memora in D:\MyKnowledge
-cd D:\MyKnowledge
-# Put .env file in this directory
+# Windows PowerShell
+[System.Environment]::SetEnvironmentVariable("OPENAI_API_KEY", "your-key", "User")
+[System.Environment]::SetEnvironmentVariable("OPENAI_BASE_URL", "https://api.openai.com/v1", "User")
+[System.Environment]::SetEnvironmentVariable("DASHSCOPE_API_KEY", "your-dashscope-key", "User")
 ```
 
-**Option A: `.env` file (recommended)**
+```bash
+# Linux / macOS (add to ~/.bashrc or ~/.zshrc)
+export OPENAI_API_KEY="your-key"
+export OPENAI_BASE_URL="https://api.openai.com/v1"
+export DASHSCOPE_API_KEY="your-dashscope-key"
+```
 
-Copy the template to your working directory:
+Restart terminal after setting.
+
+**Alternative: `.env` file (CLI only, not recommended for MCP Server)**
 
 ```bash
 cp .env.example .env
-```
-
-Edit `.env` with your API keys:
-
-```env
-# Chat LLM (OpenAI-compatible)
-OPENAI_API_KEY=sk-xxxxxxxxxxxx
-OPENAI_BASE_URL=https://api.openai.com/v1
-
-# Embedding (DashScope)
-DASHSCOPE_API_KEY=sk-xxxxxxxxxxxx
-```
-
-**Option B: System environment variables (no .env file needed)**
-
-```powershell
-# PowerShell temporary (current session only)
-$env:OPENAI_API_KEY="sk-xxx"
-$env:OPENAI_BASE_URL="https://api.openai.com/v1"
-$env:DASHSCOPE_API_KEY="sk-xxx"
-
-# Or add to system environment (persistent)
-[System.Environment]::SetEnvironmentVariable("OPENAI_API_KEY", "sk-xxx", "User")
+# Edit .env with your API keys
 ```
 
 ### 2. Model Configuration
